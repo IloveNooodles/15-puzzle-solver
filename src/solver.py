@@ -1,105 +1,64 @@
-import numpy as np
-import os
-from random import shuffle
+from library import *
+from time import sleep, time
 
 
-def branchAndBounds(puzzle):
-    print("test")
+def solveBranchAndBounds(puzzle):
+    nodeCount = 0
+    start = time()
+    # create priority queue
+    pq = PriorityQueue()
 
-
-def kurangNumber(puzzle, rowIdx, colIdx):
-    kurang = 0
-    size = len(puzzle)
-    target = puzzle[rowIdx][colIdx]
-    if target == 0:
-        target = 16
-    while rowIdx < size:
-        while colIdx < size:
-            if target > puzzle[rowIdx][colIdx] and puzzle[rowIdx][colIdx] != 0:
-                kurang += 1
-            colIdx += 1
-        colIdx = 0
-        rowIdx += 1
-    return kurang
-
-# kurang function
-
-
-def kurangFunction(puzzle):
-    sum = 0
-    for row in range(4):
-        for col in range(4):
-            if puzzle[row][col] == 0 and ((row % 2 == 0 and col % 2 == 1) or (row % 2 == 1 and col % 2 == 0)):
-                sum += 1
-            num = kurangNumber(puzzle, row, col)
-            if puzzle[row][col] == 0:
-                print(f"16\t: {num}")
+    # create root
+    root = Node(None, puzzle, zeroIdx(puzzle), countCost(puzzle), 0, "IDLE")
+    # enqueue root
+    pq.push(root)
+    # do bfs
+    while(not pq.empty()):
+        node = pq.pop()
+        # print("=========")
+        # print(node.puzzle)
+        print(node.puzzle)
+        print(node.cost)
+        if(node.cost < 10):
+            break
+        if isSolve(node.cost):
+            print("==========")
+            printSolution(node)
+            print("final gan")
+            print(f"Time execution: {time() - start}s")
+            return
+        # generate node
+        for dir in direction:
+            zeroIndex = 0
+            if(dir == "UP"):
+                zeroIndex = UP(node.puzzle, node.zeroIdx)
+            elif(dir == "RIGHT"):
+                zeroIndex = RIGHT(node.puzzle, node.zeroIdx)
+            elif(dir == "LEFT"):
+                zeroIndex = LEFT(node.puzzle, node.zeroIdx)
             else:
-                print(f"{puzzle[row][col]}\t: {num}")
-            sum += kurangNumber(puzzle, row, col)
-    return sum
-
-# check if solvable or not using kurang formula
-
-
-def isSolvable(kurangNumber):
-    return kurangNumber % 2 == 0
-
-# make a random array
+                zeroIndex = DOWN(node.puzzle, node.zeroIdx)
+            if isValidMove(zeroIndex):
+                child = createNode(
+                    node.puzzle, node.zeroIdx, zeroIndex, node.level + 1, node, dir)
+                if not np.array_equal(node.puzzle, child.puzzle):
+                    nodeCount += 1
+                    pq.push(child)
 
 
-def solve(puzzle):
-    print("Start state of puzzle\n=================")
-    print(puzzle)
-    print("=================")
-    print("Value of kurang i\n=================")
-    kurang = kurangFunction(puzzle)
-    print("=================")
-    print("Value of kurang function: ", kurang)
-    if isSolvable(kurang):
-        # solve
-        print("The path solutions are\n")
-    else:
-        print("The puzzle cannot be solved from this first state\n")
-    print("Thank you for using 15-puzzle solver\n=================")
-
-
-def createPuzzle():
-    puzzle = np.arange(0, 16)
-    shuffle(puzzle)
-    puzzle = np.reshape(puzzle, (4, 4))
-    return puzzle
-
-
-def printDir():
-    listdir = os.listdir(f"{os.getcwd()}\\test")
-    print("Select puzzle file you want to solve")
-    for i in range(len(listdir)):
-        print(f"{i+1}. {listdir[i]}")
-    choice = int(input("Select file number: "))
-    try:
-        return listdir[choice - 1]
-    except:
-        print("Please select correct number")
-        printDir()
-
-
-def readPuzzle(fileName):
-    puzzle = []
-    path = os.getcwd()
-    path += f"\\test\\{fileName}"
-    try:
-        with open(path) as f:
-            lines = f.readlines()
-            for line in lines:
-                puzzle.append(list(map(int, line.split())))
-        return np.reshape(puzzle, (4, 4))
-    except:
-        print("File is empty, program exiting...")
-        exit(0)
-
-
-fileName = printDir()
-t = readPuzzle(fileName)
-print(t)
-# solve(t)
+if __name__ == "__main__":
+    # fileName = printDir()
+    # t = readPuzzle("correct1.txt")
+    # a = zeroIdx(t)
+    # DOWN(t, a)
+    # # t = createPuzzle()
+    # print(countCost(t))
+    # zerIdx = zeroIdx(puzzle)
+    # newZerIdx = DOWN(puzzle, zerIdx)
+    # print(zerIdx, newZerIdx)
+    # # root = Node(None)
+    # print(puzzle)
+    # Node = createNode(puzzle, zerIdx, newZerIdx, 0, None, "IDLE")
+    # print(Node.puzzle)
+    puzzle = readPuzzle("correct2.txt")
+    solveBranchAndBounds(puzzle)
