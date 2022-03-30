@@ -1,11 +1,14 @@
 import numpy as np
-import os
+from os import getcwd, listdir
 from random import shuffle
 from queue import PriorityQueue
+from time import sleep, time
 
 direction = ["UP", "RIGHT", "DOWN", "LEFT"]
 target = np.reshape([[1, 2, 3, 4], [5, 6, 7, 8], [
                     9, 10, 11, 12], [13, 14, 15, 0]], (4, 4))
+
+solutionPath = 0
 
 
 class Node:  # Node class
@@ -18,29 +21,68 @@ class Node:  # Node class
         self.state = state
 
     def __lt__(self, next):
-        return self.cost <= next.cost
+        return self.cost + self.level <= next.cost + next.level
 
 
-# create new node based on the parrent
-def createNode(puzzle, zeroIdx, newZeroIdx, level, parent, state):
+def createNextPuzzle(puzzle, zeroIdx, newZeroIdx):  # create next puzzle based on move
     newPuzzle = np.copy(puzzle)
     row1, col1 = zeroIdx
     row2, col2 = newZeroIdx
     newPuzzle[row1, col1], newPuzzle[row2,
                                      col2] = newPuzzle[row2, col2], newPuzzle[row1, col1]
 
-    node = Node(parent, newPuzzle, newZeroIdx,
-                countCost(newPuzzle), level, state)
-
-    return node
+    return newPuzzle
 
 
-def printSolution(root):  # print all possible solution
+def printSolution(root, solution):  # print all possible solution
     if root == None:
         return
-    printSolution(root.parent)
-    print(root.puzzle)
-    print(f"============\nMOVE: {root.state}\n============",)
+    printSolution(root.parent, solution)
+    solution.append(root.state)
+
+
+def zeroIdx(puzzle):  # find zero index
+    idx = 0
+    for rows in range(4):
+        for cols in range(4):
+            if puzzle[rows, cols] == 0:
+                return (rows, cols)
+
+    return -1
+
+
+def isValidMove(zeroIdx):  # to check if move is valid
+    row, col = zeroIdx
+    return (0 <= row < 4) and (0 <= col < 4)
+
+
+def UP(puzzle, zeroIdx):  # move up
+    row, col = zeroIdx
+    return (row - 1, col)
+
+
+def RIGHT(puzzle, zeroIdx):  # move right
+    row, col = zeroIdx
+    return (row, col + 1)
+
+
+def DOWN(puzzle, zeroIdx):  # move down
+    row, col = zeroIdx
+    return (row + 1, col)
+
+
+def LEFT(puzzle, zeroIdx):  # move left
+    row, col = zeroIdx
+    return (row, col - 1)
+
+
+def countCost(puzzle):  # count cost with matching tile
+    cost = 0
+    for row in range(4):
+        for col in range(4):
+            if puzzle[row, col] != target[row, col] and puzzle[row, col] != 0:
+                cost += 1
+    return cost
 
 
 def kurangNumber(puzzle, rowIdx, colIdx):  # calculate less number in the puzle
@@ -91,7 +133,7 @@ def createPuzzle():  # create random puzzle
 
 
 def printDir():  # print list directory on test folder
-    listdir = os.listdir(f"{os.getcwd()}//test")
+    listdir = listdir(f"{getcwd()}//test")
     print("Select puzzle file you want to solve")
     for i in range(len(listdir)):
         print(f"{i+1}. {listdir[i]}")
@@ -105,7 +147,7 @@ def printDir():  # print list directory on test folder
 
 def readPuzzle(fileName):  # read puzzle from txt file
     puzzle = []
-    path = os.getcwd()
+    path = getcwd()
     path += f"//test//{fileName}"
     print(path)
     try:
@@ -117,47 +159,3 @@ def readPuzzle(fileName):  # read puzzle from txt file
     except:
         print("Wrong file format. Program exiting...")
         exit(0)
-
-
-def zeroIdx(puzzle):  # find zero index
-    idx = 0
-    for rows in range(4):
-        for cols in range(4):
-            if puzzle[rows, cols] == 0:
-                return (rows, cols)
-
-    return -1
-
-
-def isValidMove(zeroIdx):  # to check if move is valid
-    row, col = zeroIdx
-    return (0 <= row < 4) and (0 <= col < 4)
-
-
-def UP(puzzle, zeroIdx):  # move up
-    row, col = zeroIdx
-    return (row - 1, col)
-
-
-def RIGHT(puzzle, zeroIdx):  # move right
-    row, col = zeroIdx
-    return (row, col + 1)
-
-
-def DOWN(puzzle, zeroIdx):  # move down
-    row, col = zeroIdx
-    return (row + 1, col)
-
-
-def LEFT(puzzle, zeroIdx):  # move left
-    row, col = zeroIdx
-    return (row, col - 1)
-
-
-def countCost(puzzle):  # count cost with matching tile
-    cost = 0
-    for row in range(4):
-        for col in range(4):
-            if puzzle[row, col] != target[row, col] and puzzle[row, col] != 0:
-                cost += 1
-    return cost

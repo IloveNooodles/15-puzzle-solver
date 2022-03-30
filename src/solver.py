@@ -1,5 +1,4 @@
 from library import *
-from time import sleep, time
 
 # hashmap of visited state
 visited = {}
@@ -19,10 +18,11 @@ def solve(puzzle):  # main function
         BranchAndBounds(puzzle)
     else:
         print("The puzzle cannot be solved from this first state\n")
-    print("Thank you for using 15-puzzle solver\n=================")
+    print("Thank you for using gare's 15-puzzle solver\n=================")
 
 
 def BranchAndBounds(puzzle):
+    solutionPath = []
     nodeCount = 0
     start = time()
     # create priority queue
@@ -36,15 +36,13 @@ def BranchAndBounds(puzzle):
     visited[root.puzzle.tobytes()] = True
     while(not pq.empty()):
         node = pq.get()
-        # print("=========")
-        # print(node.puzzle)
-        # print(node.puzzle)
-        # print(node.cost)
         if node.cost == 0:
             print("==========")
-            printSolution(node)
+            printSolution(node, solutionPath)
+            print(solutionPath)
             print(f"Time execution: {time() - start}s")
             print(f"Generated node count: {nodeCount}")
+            print(f"Move needed: {len(solutionPath)}")
             return
         # generate node
         for dir in direction:
@@ -58,27 +56,19 @@ def BranchAndBounds(puzzle):
             else:
                 zeroIndex = DOWN(node.puzzle, node.zeroIdx)
             if isValidMove(zeroIndex):
-                child = createNode(
-                    node.puzzle, node.zeroIdx, zeroIndex, node.level + 1, node, dir)
-                nodeCount += 1
-                if child.puzzle.tobytes() not in visited:
-                    visited[child.puzzle.tobytes()] = True
+                newPuzzle = createNextPuzzle(
+                    node.puzzle, node.zeroIdx, zeroIndex)
+                # child = createNode(
+                #     node.puzzle, node.zeroIdx, zeroIndex, node.level + 1, node, dir)
+                newPuzzleBytes = newPuzzle.tobytes()
+                if newPuzzleBytes not in visited:
+                    child = Node(node, newPuzzle, zeroIndex,
+                                 countCost(newPuzzle), node.level + 1, dir)
+                    visited[newPuzzleBytes] = True
+                    nodeCount += 1
                     pq.put(child)
 
 
 if __name__ == "__main__":
-    # fileName = printDir()
-    # t = readPuzzle("correct1.txt")
-    # a = zeroIdx(t)
-    # DOWN(t, a)
-    # # t = createPuzzle()
-    # print(countCost(t))
-    # zerIdx = zeroIdx(puzzle)
-    # newZerIdx = DOWN(puzzle, zerIdx)
-    # print(zerIdx, newZerIdx)
-    # # root = Node(None)
-    # print(puzzle)
-    # Node = createNode(puzzle, zerIdx, newZerIdx, 0, None, "IDLE")
-    # print(Node.puzzle)
-    puzzle = readPuzzle("correct2.txt")
+    puzzle = readPuzzle("correct7.txt")
     solve(puzzle)
