@@ -1,6 +1,7 @@
 from library import *
 from time import sleep, time
 
+visited = {}
 
 def solveBranchAndBounds(puzzle):
     nodeCount = 0
@@ -13,19 +14,19 @@ def solveBranchAndBounds(puzzle):
     # enqueue root
     pq.push(root)
     # do bfs
+    visited[root.puzzle.tobytes()] = True
     while(not pq.empty()):
         node = pq.pop()
         # print("=========")
         # print(node.puzzle)
-        print(node.puzzle)
-        print(node.cost)
-        if(node.cost < 10):
-            break
+        # print(node.puzzle)
+        # print(node.cost)
         if isSolve(node.cost):
             print("==========")
-            printSolution(node)
+            # printSolution(node)
             print("final gan")
             print(f"Time execution: {time() - start}s")
+            print(nodeCount)
             return
         # generate node
         for dir in direction:
@@ -41,8 +42,9 @@ def solveBranchAndBounds(puzzle):
             if isValidMove(zeroIndex):
                 child = createNode(
                     node.puzzle, node.zeroIdx, zeroIndex, node.level + 1, node, dir)
-                if not np.array_equal(node.puzzle, child.puzzle):
-                    nodeCount += 1
+                nodeCount += 1
+                if child.puzzle.tobytes() not in visited:
+                    visited[child.puzzle.tobytes()] = True
                     pq.push(child)
 
 
@@ -62,3 +64,4 @@ if __name__ == "__main__":
     # print(Node.puzzle)
     puzzle = readPuzzle("correct2.txt")
     solveBranchAndBounds(puzzle)
+    print("tst")

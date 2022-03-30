@@ -6,8 +6,6 @@ from heapq import heappush, heappop
 direction = ["UP", "RIGHT", "DOWN", "LEFT"]
 target = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
 target = np.reshape(target, (4, 4))
-
-
 class PriorityQueue:
     def __init__(self):
         self.heap = []
@@ -35,7 +33,7 @@ class Node:
         self.state = state
 
     def __lt__(self, next):
-        return self.cost < next.cost
+        return self.cost <= next.cost
 
 
 def createNode(puzzle, zeroIdx, newZeroIdx, level, parent, state):
@@ -46,7 +44,7 @@ def createNode(puzzle, zeroIdx, newZeroIdx, level, parent, state):
                                      col2] = newPuzzle[row2, col2], newPuzzle[row1, col1]
 
     node = Node(parent, newPuzzle, newZeroIdx,
-                countCost(newPuzzle) + level, level, state)
+                countCost(newPuzzle), level, state)
 
     return node
 
@@ -142,7 +140,8 @@ def printDir():
 def readPuzzle(fileName):
     puzzle = []
     path = os.getcwd()
-    path += f"\\test\\{fileName}"
+    path += f"//test//{fileName}"
+    print(path)
     try:
         with open(path) as f:
             lines = f.readlines()
