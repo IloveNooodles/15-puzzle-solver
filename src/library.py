@@ -1,29 +1,14 @@
 import numpy as np
 import os
 from random import shuffle
-from heapq import heappush, heappop
+from queue import PriorityQueue
 
 direction = ["UP", "RIGHT", "DOWN", "LEFT"]
-target = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]
-target = np.reshape(target, (4, 4))
-class PriorityQueue:
-    def __init__(self):
-        self.heap = []
-
-    def push(self, k):
-        heappush(self.heap, k)
-
-    def pop(self):
-        return heappop(self.heap)
-
-    def empty(self):
-        if not self.heap:
-            return True
-        else:
-            return False
+target = np.reshape([[1, 2, 3, 4], [5, 6, 7, 8], [
+                    9, 10, 11, 12], [13, 14, 15, 0]], (4, 4))
 
 
-class Node:
+class Node:  # Node class
     def __init__(self, parent, puzzle, zeroIdx, cost, level, state):
         self.parent = parent
         self.puzzle = puzzle
@@ -36,6 +21,7 @@ class Node:
         return self.cost <= next.cost
 
 
+# create new node based on the parrent
 def createNode(puzzle, zeroIdx, newZeroIdx, level, parent, state):
     newPuzzle = np.copy(puzzle)
     row1, col1 = zeroIdx
@@ -49,7 +35,7 @@ def createNode(puzzle, zeroIdx, newZeroIdx, level, parent, state):
     return node
 
 
-def printSolution(root):
+def printSolution(root):  # print all possible solution
     if root == None:
         return
     printSolution(root.parent)
@@ -57,7 +43,7 @@ def printSolution(root):
     print(f"============\nMOVE: {root.state}\n============",)
 
 
-def kurangNumber(puzzle, rowIdx, colIdx):
+def kurangNumber(puzzle, rowIdx, colIdx):  # calculate less number in the puzle
     kurang = 0
     size = len(puzzle)
     target = puzzle[rowIdx, colIdx]
@@ -72,10 +58,8 @@ def kurangNumber(puzzle, rowIdx, colIdx):
         rowIdx += 1
     return kurang
 
-# kurang function
 
-
-def kurangFunction(puzzle):
+def kurangFunction(puzzle):  # calculate all less number in the puzzle
     sum = 0
     for row in range(4):
         for col in range(4):
@@ -85,7 +69,7 @@ def kurangFunction(puzzle):
     return sum
 
 
-def cetakKurang(puzzle):
+def cetakKurang(puzzle):  # print all kurang number in the puzzle
     for row in range(4):
         for col in range(4):
             num = kurangNumber(puzzle, row, col)
@@ -93,39 +77,21 @@ def cetakKurang(puzzle):
                 print(f"16\t: {num}")
             else:
                 print(f"{puzzle[row, col]}\t: {num}")
-# check if solvable or not using kurang formula
 
 
-def isSolvable(kurangNumber):
+def isSolvable(kurangNumber):  # check if solvable or not using kurang formula
     return kurangNumber % 2 == 0
 
 
-def solve(puzzle):
-    print("Start state of puzzle\n=================")
-    print(puzzle)
-    print("=================")
-    print("Value of kurang i\n=================")
-    cetakKurang(puzzle)
-    kurang = kurangFunction(puzzle)
-    print("=================")
-    print("Value of kurang function: ", kurang)
-    if isSolvable(kurang):
-        # solve
-        print("The path solutions are\n")
-    else:
-        print("The puzzle cannot be solved from this first state\n")
-    print("Thank you for using 15-puzzle solver\n=================")
-
-
-def createPuzzle():
+def createPuzzle():  # create random puzzle
     puzzle = np.arange(0, 16)
     shuffle(puzzle)
     puzzle = np.reshape(puzzle, (4, 4))
     return puzzle
 
 
-def printDir():
-    listdir = os.listdir(f"{os.getcwd()}\\test")
+def printDir():  # print list directory on test folder
+    listdir = os.listdir(f"{os.getcwd()}//test")
     print("Select puzzle file you want to solve")
     for i in range(len(listdir)):
         print(f"{i+1}. {listdir[i]}")
@@ -137,7 +103,7 @@ def printDir():
         printDir()
 
 
-def readPuzzle(fileName):
+def readPuzzle(fileName):  # read puzzle from txt file
     puzzle = []
     path = os.getcwd()
     path += f"//test//{fileName}"
@@ -153,7 +119,7 @@ def readPuzzle(fileName):
         exit(0)
 
 
-def zeroIdx(puzzle):
+def zeroIdx(puzzle):  # find zero index
     idx = 0
     for rows in range(4):
         for cols in range(4):
@@ -163,41 +129,35 @@ def zeroIdx(puzzle):
     return -1
 
 
-def isValidMove(zeroIdx):
+def isValidMove(zeroIdx):  # to check if move is valid
     row, col = zeroIdx
     return (0 <= row < 4) and (0 <= col < 4)
 
-# Move 4 direction
 
-
-def UP(puzzle, zeroIdx):
+def UP(puzzle, zeroIdx):  # move up
     row, col = zeroIdx
     return (row - 1, col)
 
 
-def RIGHT(puzzle, zeroIdx):
+def RIGHT(puzzle, zeroIdx):  # move right
     row, col = zeroIdx
     return (row, col + 1)
 
 
-def DOWN(puzzle, zeroIdx):
+def DOWN(puzzle, zeroIdx):  # move down
     row, col = zeroIdx
     return (row + 1, col)
 
 
-def LEFT(puzzle, zeroIdx):
+def LEFT(puzzle, zeroIdx):  # move left
     row, col = zeroIdx
     return (row, col - 1)
 
 
-def countCost(puzzle):
+def countCost(puzzle):  # count cost with matching tile
     cost = 0
     for row in range(4):
         for col in range(4):
             if puzzle[row, col] != target[row, col] and puzzle[row, col] != 0:
                 cost += 1
     return cost
-
-
-def isSolve(cost):
-    return cost == 0
