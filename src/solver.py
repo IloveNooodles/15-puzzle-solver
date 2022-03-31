@@ -56,19 +56,19 @@ def BranchAndBounds(puzzle):
             else:
                 zeroIndex = DOWN(node.puzzle, node.zeroIdx)
             if isValidMove(zeroIndex):
-                newPuzzle = createNextPuzzle(
-                    node.puzzle, node.zeroIdx, zeroIndex)
+                newPuzzle, costAfter = createNextPuzzle(
+                    node.puzzle, node.zeroIdx, zeroIndex, node.cost)
                 # child = createNode(
                 #     node.puzzle, node.zeroIdx, zeroIndex, node.level + 1, node, dir)
                 newPuzzleBytes = newPuzzle.tobytes()
                 if newPuzzleBytes not in visited:
                     child = Node(node, newPuzzle, zeroIndex,
-                                 countCost(newPuzzle), node.level + 1, dir)
+                                 costAfter, node.level + 1, dir)
                     visited[newPuzzleBytes] = True
                     nodeCount += 1
                     pq.put(child)
 
 
 if __name__ == "__main__":
-    puzzle = readPuzzle("correct7.txt")
+    puzzle = readPuzzle("correct8.txt")
     solve(puzzle)

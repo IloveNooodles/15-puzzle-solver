@@ -24,14 +24,25 @@ class Node:  # Node class
         return self.cost + self.level <= next.cost + next.level
 
 
-def createNextPuzzle(puzzle, zeroIdx, newZeroIdx):  # create next puzzle based on move
+# create next puzzle based on move
+def createNextPuzzle(puzzle, zeroIdx, newZeroIdx, costBefore):
     newPuzzle = np.copy(puzzle)
     row1, col1 = zeroIdx
     row2, col2 = newZeroIdx
+    before, after = False, False
+    if newPuzzle[row2, col2] == target[row2, col2]:
+        before = True
     newPuzzle[row1, col1], newPuzzle[row2,
                                      col2] = newPuzzle[row2, col2], newPuzzle[row1, col1]
+    if newPuzzle[row1, col1] == target[row1, col1]:
+        after = True
 
-    return newPuzzle
+    if before == False and after == True:
+        costBefore -= 1
+
+    if before == True and after == False:
+        costBefore += 1
+    return newPuzzle, costBefore
 
 
 def printSolution(root, solution):  # print all possible solution
