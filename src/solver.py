@@ -15,13 +15,13 @@ def solve(puzzle):  # main function
     print("Value of kurang function: ", kurang)
     if isSolvable(kurang):
         print("The path solutions are\n")
-        BranchAndBounds(puzzle)
+        BranchAndBounds(puzzle, False)
     else:
         print("The puzzle cannot be solved from this first state\n")
     print("Thank you for using gare's 15-puzzle solver\n=================")
 
 
-def BranchAndBounds(puzzle):
+def BranchAndBounds(puzzle, state):
     solutionPath = []
     nodeCount = 0
     start = time()
@@ -37,8 +37,10 @@ def BranchAndBounds(puzzle):
     while(not pq.empty()):
         node = pq.get()
         if node.cost == 0:
-            print("==========")
             printSolution(node, solutionPath)
+            if state:
+                return solutionPath
+            print("==========")
             print(solutionPath)
             print(f"Time execution: {time() - start}s")
             print(f"Generated node count: {nodeCount}")
@@ -61,14 +63,16 @@ def BranchAndBounds(puzzle):
                 # child = createNode(
                 #     node.puzzle, node.zeroIdx, zeroIndex, node.level + 1, node, dir)
                 newPuzzleBytes = newPuzzle.tobytes()
-                if newPuzzleBytes not in visited:
-                    child = Node(node, newPuzzle, zeroIndex,
-                                 costAfter, node.level + 1, dir)
-                    visited[newPuzzleBytes] = True
-                    nodeCount += 1
-                    pq.put(child)
+                if newPuzzleBytes in visited:
+                    continue
+
+                child = Node(node, newPuzzle, zeroIndex,
+                             costAfter, node.level + 1, dir)
+                visited[newPuzzleBytes] = True
+                nodeCount += 1
+                pq.put(child)
 
 
 if __name__ == "__main__":
-    puzzle = readPuzzle("correct8.txt")
+    puzzle = readPuzzle("correct3.txt")
     solve(puzzle)
