@@ -1,5 +1,5 @@
 import numpy as np
-from os import getcwd, listdir
+import os
 from random import shuffle
 from queue import PriorityQueue
 from time import sleep, time
@@ -49,6 +49,8 @@ def printSolution(root, solution):  # print all possible solution
     if root == None:
         return
     printSolution(root.parent, solution)
+    print(
+        f"================================\n{root.puzzle}\n MOVE: {root.state}\n================================\n")
     solution.append(root.state)
 
 
@@ -144,13 +146,13 @@ def createPuzzle():  # create random puzzle
 
 
 def printDir():  # print list directory on test folder
-    listdir = listdir(f"{getcwd()}//test")
+    os.listdir = os.listdir(f"{os.getcwd()}//test")
     print("Select puzzle file you want to solve")
-    for i in range(len(listdir)):
-        print(f"{i+1}. {listdir[i]}")
-    choice = int(input("Select file number: "))
+    for i in range(len(os.listdir)):
+        print(f"{i+1}. {os.listdir[i]}")
+    choice = int(input("> "))
     try:
-        return listdir[choice - 1]
+        return os.listdir[choice - 1]
     except:
         print("Please select correct number")
         printDir()
@@ -158,9 +160,8 @@ def printDir():  # print list directory on test folder
 
 def readPuzzle(fileName):  # read puzzle from txt file
     puzzle = []
-    path = getcwd()
+    path = os.getcwd()
     path += f"//test//{fileName}"
-    print(path)
     try:
         with open(path) as f:
             lines = f.readlines()
@@ -170,3 +171,48 @@ def readPuzzle(fileName):  # read puzzle from txt file
     except:
         print("Wrong file format. Program exiting...")
         exit(0)
+
+
+def readPuzzleInput():
+    print("Input unique number between 1 - 15 (put 0 for empty space)")
+    print("The number you choose is 4 per line ex: 1 2 3 4 (seperated by whitespace)")
+    puz = []
+    correct = 0
+    number = set()
+    while correct < 4:
+        foundDuplicate = False
+        line = input("> ")
+        toAdd = list(map(int, line.split()))
+
+        # check len
+        if len(toAdd) != 4:
+            print("Please input correct format")
+            continue
+
+        # check if there are duplicate number
+        for num in toAdd:
+            if num in number:
+                print(f"{num} is duplicate number")
+                foundDuplicate = True
+                break
+
+        if foundDuplicate:
+            continue
+        # insert to set
+        for num in toAdd:
+            number.add(num)
+
+        if len(toAdd) == 4:
+            puz.append(toAdd)
+            correct += 1
+
+    print("\n")
+    return np.reshape(puz, (4, 4))
+
+
+def menu():
+    print("What do you want to do?")
+    print("[1] Read puzzle from input user")
+    print("[2] Generate random puzzle")
+    print("[3] Read Puzzle from file")
+    print("[Q] Exit The Program")

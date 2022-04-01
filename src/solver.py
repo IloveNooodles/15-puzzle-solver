@@ -5,20 +5,18 @@ visited = {}
 
 
 def solve(puzzle):  # main function
-    print("Start state of puzzle\n=================")
+    print("================================\nStart state of puzzle\n================================")
     print(puzzle)
-    print("=================")
-    print("Value of kurang i\n=================")
+    print("================================")
+    print("Value of kurang i\n================================")
     cetakKurang(puzzle)
     kurang = kurangFunction(puzzle)
-    print("=================")
+    print("================================")
     print("Value of kurang function: ", kurang)
     if isSolvable(kurang):
-        print("The path solutions are\n")
         BranchAndBounds(puzzle)
     else:
         print("The puzzle cannot be solved from this first state\n")
-    print("Thank you for using gare's 15-puzzle solver\n=================")
 
 
 def BranchAndBounds(puzzle):
@@ -37,12 +35,12 @@ def BranchAndBounds(puzzle):
     while(not pq.empty()):
         node = pq.get()
         if node.cost == 0:
-            print("==========")
+            print("================================")
+            print("The path solutions are")
             printSolution(node, solutionPath)
-            print(solutionPath)
             print(f"Time execution: {time() - start}s")
             print(f"Generated node count: {nodeCount}")
-            print(f"Move needed: {len(solutionPath)}")
+            print(f"Move needed({len(solutionPath)}): {solutionPath}\n")
             return
         # generate node
         for dir in direction:
