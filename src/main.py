@@ -1,6 +1,6 @@
 import solver
 
-print("Welcome to gare's 15 puzzle solver\nwhat do you want to do?")
+print("Welcome to gare's 15 puzzle solver\n")
 while True:
     solver.menu()
     choice = input("> ")

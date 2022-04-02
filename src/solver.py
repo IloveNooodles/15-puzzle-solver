@@ -38,9 +38,12 @@ def BranchAndBounds(puzzle):
             print("================================")
             print("The path solutions are")
             printSolution(node, solutionPath)
+            print("================================")
             print(f"Time execution: {time() - start}s")
             print(f"Generated node count: {nodeCount}")
-            print(f"Move needed({len(solutionPath)}): {solutionPath}\n")
+            print(f"Move needed({len(solutionPath)}): {solutionPath}")
+            print("================================")
+
             return
         # generate node
         for dir in direction:
@@ -56,8 +59,6 @@ def BranchAndBounds(puzzle):
             if isValidMove(zeroIndex):
                 newPuzzle, costAfter = createNextPuzzle(
                     node.puzzle, node.zeroIdx, zeroIndex, node.cost)
-                # child = createNode(
-                #     node.puzzle, node.zeroIdx, zeroIndex, node.level + 1, node, dir)
                 newPuzzleBytes = newPuzzle.tobytes()
                 if newPuzzleBytes not in visited:
                     child = Node(node, newPuzzle, zeroIndex,
@@ -65,8 +66,3 @@ def BranchAndBounds(puzzle):
                     visited[newPuzzleBytes] = True
                     nodeCount += 1
                     pq.put(child)
-
-
-if __name__ == "__main__":
-    puzzle = readPuzzle("correct8.txt")
-    solve(puzzle)

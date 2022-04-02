@@ -8,8 +8,6 @@ direction = ["UP", "RIGHT", "DOWN", "LEFT"]
 target = np.reshape([[1, 2, 3, 4], [5, 6, 7, 8], [
                     9, 10, 11, 12], [13, 14, 15, 0]], (4, 4))
 
-solutionPath = 0
-
 
 class Node:  # Node class
     def __init__(self, parent, puzzle, zeroIdx, cost, level, state):
@@ -50,7 +48,7 @@ def printSolution(root, solution):  # print all possible solution
         return
     printSolution(root.parent, solution)
     print(
-        f"================================\n{root.puzzle}\n MOVE: {root.state}\n================================\n")
+        f"================================\n{root.puzzle}\n================================\nMOVE: {root.state}")
     solution.append(root.state)
 
 
