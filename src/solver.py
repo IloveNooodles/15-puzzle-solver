@@ -1,8 +1,5 @@
 from library import *
 
-# hashmap of visited state
-visited = {}
-
 
 def solve(puzzle):  # main function
     print("================================\nStart state of puzzle\n================================")
@@ -23,6 +20,9 @@ def BranchAndBounds(puzzle):
     solutionPath = []
     nodeCount = 0
     start = time()
+
+    # hashmap of visited state
+    visited = {}
     # create priority queue
     pq = PriorityQueue()
 

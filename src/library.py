@@ -146,22 +146,25 @@ def createPuzzle():  # create random puzzle
 
 
 def printDir():  # print list directory on test folder
-    os.listdir = os.listdir(f"{os.getcwd()}//test")
+    os.chdir("../")
+    listdir = os.listdir(f"{os.getcwd()}//test")
+    os.chdir(".//src")
     print("Select puzzle file you want to solve")
-    for i in range(len(os.listdir)):
-        print(f"{i+1}. {os.listdir[i]}")
+    for i in range(len(listdir)):
+        print(f"{i+1}. {listdir[i]}")
     choice = int(input("> "))
-    try:
-        return os.listdir[choice - 1]
-    except:
+    while(choice < 1 or choice > len(listdir)):
         print("Please select correct number")
-        printDir()
+        choice = int(input("> "))
+    return listdir[choice - 1]
 
 
 def readPuzzle(fileName):  # read puzzle from txt file
     puzzle = []
+    os.chdir("../")
     path = os.getcwd()
     path += f"//test//{fileName}"
+    os.chdir(".//src")
     try:
         with open(path) as f:
             lines = f.readlines()
