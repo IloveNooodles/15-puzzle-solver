@@ -23,7 +23,7 @@ This programs will output least amount move possilbe to solve the puzzle using b
 ## Input
 
 1. Input is unique number from 1 to 15
-2. Use 0 for empty space
+2. **Use 0 for empty space**
 3. template for text file
 
 ```md
