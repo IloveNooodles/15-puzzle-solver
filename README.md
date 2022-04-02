@@ -4,6 +4,9 @@ This repository is made to fulfill Tugas Kecil 1 Strategi Algoritma 2022. 15 Puz
 
 ## Screenshots
 
+![image](https://user-images.githubusercontent.com/63847012/161382493-215cd9f9-a91d-4186-9373-ab3966eca344.png)
+![image](https://user-images.githubusercontent.com/63847012/161382521-0192b86c-f1d0-4e07-9f05-8b133e813936.png)
+
 ## Technologies used
 
 1. [Python (3.8+)](https://www.python.org/)
@@ -18,7 +21,8 @@ This programs will output least amount move possilbe to solve the puzzle using b
 1. Install requirement from the `technologies section`
 2. Clone the repository using `git clone https://github.com/IloveNooodles/15-puzzle-solver.git`
 3. Open the folder and move to src using `cd src`
-4. Run the file using `python main.py`
+4. **Make sure you are in the src directory otherwise it won't work**
+5. Run the file using `python main.py`
 
 ## Input
 
@@ -44,25 +48,24 @@ This programs will output least amount move possilbe to solve the puzzle using b
 1. Make GUI for program to better visualization
 2. Better approach in the algorithm for faster runtime
 
-## folder structure
+## Folder structure
 
 ```md
-│ .gitignore
-│ README.md
-│ solve.py
-│
-├───doc
-├───src
-│ library.py
-│ main.py
-│ solver.py
-│
-└───test
-correct1.txt
-correct2.txt
-correct3.txt
-correct4.txt
-correct5.txt
-false1.txt
-false2.txt
+├── README.md
+├── doc
+│   └── Tucil3_13520029.pdf       
+├── src
+│   ├── library.py
+│   ├── main.py
+│   └── solver.py
+└── test
+    ├── correct1.txt
+    ├── correct2.txt
+    ├── correct3.txt
+    ├── correct4.txt
+    ├── correct5.txt
+    ├── false1.txt
+    └── false2.txt
 ```
+### Made with ❤ by IloveNooodles
+
