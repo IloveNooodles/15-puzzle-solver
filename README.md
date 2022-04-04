@@ -1,6 +1,6 @@
 # 15-puzzle-solver
 
-This repository is made to fulfill Tugas Kecil 1 Strategi Algoritma 2022. 15 Puzzle Solver made using python and using the principles of branch and bounds algorithm.
+This repository is made to fulfill Tugas Kecil 3 Strategi Algoritma 2022. 15 Puzzle Solver made using python and using the principles of branch and bounds algorithm.
 
 ## Screenshots
 
